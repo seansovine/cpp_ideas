@@ -10,7 +10,7 @@ struct is_unique_ptr< std::unique_ptr< T > > : std::true_type {};
 
 // Holds a raw pointer or unique pointer; if a raw pointer, deletes it on destruction.
 
-template < typename T, typename HeldType >
+template < typename T, typename WrappedType >
 class PointerHolder {
   T* ptr;
 
@@ -21,6 +21,7 @@ public:
   template < typename U >
   PointerHolder( U* u ) : ptr{ u } {};
 
+  // Treat r-value smart pointer like raw pointer to prevent use after free.
   template < typename U >
   PointerHolder( std::unique_ptr< U >&& u ) : ptr{ u.release() } {};
 
@@ -28,7 +29,7 @@ public:
   PointerHolder( U ) = delete;
 
   ~PointerHolder() {
-    if constexpr ( !is_unique_ptr< HeldType >::value ) {
+    if constexpr ( !is_unique_ptr< WrappedType >::value ) {
       delete ptr;
     }
   };
@@ -41,6 +42,8 @@ public:
     return ptr;
   }
 };
+
+// Guides for CTAD.
 
 template < typename U >
 PointerHolder( const std::unique_ptr< U >& ) -> PointerHolder< U, std::unique_ptr< U > >;
