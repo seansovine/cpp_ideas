@@ -1,0 +1,18 @@
+---
+Language:     Cpp
+BasedOnStyle: Google
+
+ColumnLimit:  120
+SortIncludes: true
+
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+
+SpacesInParens: Custom
+SpacesInParensOptions:
+  Other: true
+
+SpacesInAngles: Always
+SpacesInSquareBrackets: true
+
+AccessModifierOffset: -2
