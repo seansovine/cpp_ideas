@@ -71,3 +71,10 @@ int main() {
 
   return 0;
 };
+
+/**
+ *  Linux gcc build and valgrind:
+ *
+ *  g++ -std=c++20 -g pointer_holder.cpp -o build/pointer_holder \
+ *    && valgrind --leak-check=yes build/pointer_holder
+*/
