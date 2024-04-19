@@ -16,17 +16,25 @@ class PointerHolder {
 
 public:
   template < typename U >
-  PointerHolder( const std::unique_ptr< U >& u ) : ptr{ u.get() } {};
+  explicit PointerHolder( const std::unique_ptr< U >& u ) : ptr{ u.get() } {};
 
   template < typename U >
-  PointerHolder( U* u ) : ptr{ u } {};
+  explicit PointerHolder( U* u ) : ptr{ u } {};
 
   // Treat r-value smart pointer like raw pointer to prevent use after free.
   template < typename U >
-  PointerHolder( std::unique_ptr< U >&& u ) : ptr{ u.release() } {};
+  explicit PointerHolder( std::unique_ptr< U >&& u ) : ptr{ u.release() } {};
 
-  template < typename U >
-  PointerHolder( U ) = delete;
+  // The ownership semantics dictate no copying.
+  PointerHolder( const PointerHolder< T, WrappedType >& ) = delete;
+
+  // In this case we transfer ownership.
+  PointerHolder( PointerHolder< T, T* >&& other ) : ptr{ other.ptr } {
+    other.ptr = nullptr;
+  };
+
+  // In this case we take over the "borrow".
+  PointerHolder( PointerHolder< T, std::unique_ptr< T > >&& other ) : ptr{ std::move( other.ptr ) } {};
 
   ~PointerHolder() {
     if constexpr ( !is_unique_ptr< WrappedType >::value ) {
@@ -69,12 +77,21 @@ int main() {
 
   std::cout << "Size of " << *holderOne << " is " << holderOne->size() << "." << std::endl;
 
+  // Will not compile:
+  // PointerHolder holderCopy( holderOne );
+
+  PointerHolder movedHolderOne( std::move( holderOne ) );
+  PointerHolder movedHolderTwo( std::move( holderTwo ) );
+
+  std::cout << "Moved holderOne value: " << *movedHolderOne << std::endl;
+  std::cout << "Moved holderTwo value: " << *movedHolderTwo << std::endl;
+
   return 0;
 };
 
 /**
  *  Linux gcc build and valgrind:
  *
- *  g++ -std=c++20 -g pointer_holder.cpp -o build/pointer_holder \
+ *  g++ -std=c++20 -g -Wall -Werror pointer_holder.cpp -o build/pointer_holder \
  *    && valgrind --leak-check=yes build/pointer_holder
-*/
+ */
