@@ -2,6 +2,12 @@
 
 This repo will contain small programs to try out different ideas in C++.
 
+*Note:* The class below is probably YAGNI; there are probably simpler ways to
+solve the same problem whenever it comes up. Or there are complexities of
+actual use cases that this is ignoring. I just made it for fun and for
+learning purposes. And hopefully I'll add more ideas and more discussion
+later.
+
 ## `maybe_owning`
 
 This has a class `PointerHolder` that acts as a wrapper for either a `std::unique_ptr` or
