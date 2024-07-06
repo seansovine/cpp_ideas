@@ -38,3 +38,17 @@ auto ptr = std::make_unique< Thing >( args... );
 otherFunc( *ptr );
 ptr->otherMemberFunc();
 ```
+
+# `simple_concurrent_console_game`
+
+This is a very simple console "game", for testing out basic concurrency ideas.
+It has one thread that reads key input from a UNIX standard input (which the program
+is expected to be associated with) and another thread that has a render loop that
+prints the current state of a very simple game board. There is a thread-safe queue
+which has been lifted directly from the example code repo for Anthony Williams' book
+_C++ Concurrency in Action_,
+[here](https://github.com/anthonywilliams/ccia_code_samples/blob/main/listings/listing_4.5.cpp).
+(Reading through that book motivated this example.)
+The key input thread populates this queue, and before each draw the render loop
+applies all the arrow key presses stored in the queue to update the current position
+of the "game piece". The render thread sleeps half a second at the end of each iteration.
