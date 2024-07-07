@@ -1,7 +1,7 @@
 // A simple console game to experiment with concurrent
 // input and display implementations.
 
-// Linux (Unix) specific terminal interaction.
+// Unix-specific terminal interaction.
 #include <termios.h>
 #define STDIN_FILENO 0
 
@@ -45,14 +45,11 @@ void print_board() {
 
 void setupTerminal() {
   struct termios t;
-
   tcgetattr( STDIN_FILENO, &t );
-
   // Prevent terminal from buffering input.
   t.c_lflag &= ~ICANON;
   // Prevent terminal from immediately echoing input.
   t.c_lflag &= ~ECHO;
-
   tcsetattr( STDIN_FILENO, TCSANOW, &t );
 }
 
@@ -71,7 +68,6 @@ KeyDirection getKeypress() {
   if ( d != 91 ) {
     return KeyDirection::NONE;
   }
-
   std::cin >> e;
   switch ( e ) {
     case 65:
@@ -87,7 +83,7 @@ KeyDirection getKeypress() {
   }
 }
 
-// Lifted directly from the code samples from Williams' book.
+// Copied directly from the code samples from Williams' book.
 // See: https://github.com/anthonywilliams/ccia_code_samples
 // This is Listing 4.5.
 
@@ -182,7 +178,6 @@ void handleInput() {
       }
 #endif
     }
-
     keypressQueue.push( lastPressedDirection );
   }
 }
@@ -191,7 +186,6 @@ int main() {
   using namespace std::chrono_literals;
 
   print_board();
-
   // Launch terminal input thread.
   std::thread inputThread( handleInput );
 
@@ -219,7 +213,6 @@ int main() {
           throw std::runtime_error( "A NONE type direction should not be queued." );
           break;
       }
-
 #if DEBUG
       switch ( nextPressed ) {
         case KeyDirection::UP:
@@ -243,7 +236,6 @@ int main() {
 #endif
     }
     print_board();
-
     // Pause main thread -- experiment with different times (if any).
     std::this_thread::sleep_for( 500ms );
   }
