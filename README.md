@@ -39,12 +39,14 @@ otherFunc( *ptr );
 ptr->otherMemberFunc();
 ```
 
-# `simple_concurrent_console_game`
+## `simple_concurrent_console_game`
 
-This is a very simple console "game", for testing out basic concurrency ideas.
-It has one thread that reads key input from a UNIX standard input (which the program
-is expected to be associated with) and another thread that has a render loop that
-prints the current state of a very simple game board. There is a thread-safe queue
+This is a very simple text-based terminal "game", for testing out basic concurrency ideas.
+It has one thread that reads key input from the UNIX standard input (which the program
+is expected to be associated with, hence "console") and another thread that has a render loop that
+prints the current state of a very simple game board. 
+
+There is a thread-safe queue
 which has been lifted directly from the example code repo for Anthony Williams' book
 _C++ Concurrency in Action_,
 [here](https://github.com/anthonywilliams/ccia_code_samples/blob/main/listings/listing_4.5.cpp).
