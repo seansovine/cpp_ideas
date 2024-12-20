@@ -12,6 +12,8 @@ using namespace std::chrono_literals;
 
 #include "curses_console.h"
 
+#define KEY_Q 0x71
+
 // Dimensions of the game board we are using.
 constexpr int WIDTH = 8;
 constexpr int HEIGHT = 3;
@@ -91,7 +93,7 @@ int main() {
   bool running = true;
   while (running) {
     for (auto ch = console.getChar(); ch != CursesConsole::NO_KEY; ch = console.getChar()) {
-      if (ch == 0x71) {
+      if (ch == KEY_Q) {
         running = false;
         break;
       }
@@ -114,6 +116,8 @@ int main() {
   console.addString( "any key" );
   console.whiteOnBlack();
   console.addString( " to continue..." );
+
+  // Clear rest of old text from line.
   auto lineErase = "                           ";
   console.addString( lineErase );
 
