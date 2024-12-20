@@ -19,8 +19,9 @@ typedef struct _win_st WINDOW;
 
 class CursesConsole {
 public:
+  // Initializes curses console state.
   CursesConsole();
-
+  // Calls curses func to restore console.
   ~CursesConsole();
 
   // Set current text/background colors.
