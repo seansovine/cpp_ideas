@@ -12,8 +12,6 @@ CursesConsole::CursesConsole() {
     throw std::runtime_error( "Failed to initialize curses window." );
   }
 
-  // Disable buffering.
-  cbreak();
   // Disable echoing.
   noecho();
   // Allow capturing special keys.
@@ -24,11 +22,26 @@ CursesConsole::CursesConsole() {
   // Create explicit color pairs.
   init_pair( 1, COLOR_WHITE, COLOR_BLACK );
   init_pair( 2, COLOR_BLUE, COLOR_BLACK );
+  init_pair( 3, COLOR_RED, COLOR_BLACK );
 }
 
 CursesConsole::~CursesConsole() {
   // Restore terminal state.
   endwin();
+}
+
+void CursesConsole::noInputBuffer() {
+  // Disable input buffering.
+  cbreak();
+}
+
+void CursesConsole::nonBlockingGetCh() {
+  nodelay( stdscr, true );
+}
+
+void CursesConsole::blockingGetCh() {
+  // Make getCh calls block again.
+  wtimeout( stdscr, -1 );
 }
 
 void CursesConsole::whiteOnBlack() {
@@ -39,12 +52,20 @@ void CursesConsole::blueOnBlack() {
   wattron( scr, COLOR_PAIR( 2 ) );
 }
 
+void CursesConsole::redOnBlack() {
+  wattron( scr, COLOR_PAIR( 3 ) );
+}
+
 void CursesConsole::writeBuffer() {
   wrefresh( scr );
 }
 
 void CursesConsole::moveCursor( int x, int y ) {
   wmove( scr, y, x );
+}
+
+void CursesConsole::addChar( const char ch ) {
+  waddch( scr, ch );
 }
 
 void CursesConsole::addString( const std::string &str ) {

@@ -2,7 +2,36 @@
 
 This repo will contain small programs to try out different ideas in C++.
 
-## `maybe_owning`
+## Simple concurrent console game
+
+This is in file [`simple_game.cpp`](simple_concurrent_console_game/simple_game.cpp).
+It is a very simple text-based terminal "game", for testing out basic concurrency ideas.
+It has one thread that reads key input from the UNIX standard input (which the program
+is expected to be associated with, hence "console") and the main thread has a render loop that
+prints the current state of a very simple game board.
+
+There is a thread-safe queue,
+which has been borrowed from the example code repo for Anthony Williams' book
+_C++ Concurrency in Action_,
+[here](https://github.com/anthonywilliams/ccia_code_samples/blob/main/listings/listing_4.5.cpp).
+(Reading through that book motivated this example.)
+The key input thread populates this queue, and before each draw the render loop
+applies all the arrow key presses stored in the queue to update the current position
+of the "game piece". The main thread sleeps half a second at the end of each iteration
+of the render loop.
+
+## Ncurses simple console game
+
+In the file [`simple_game_curses.cpp`](simple_concurrent_console_game/simple_game_curses.cpp) we
+have an `ncurses` implementation of the same simple "game" above. In this case all the
+concurrency is really handled by the operating system behind the since, as it collects
+keypresses in a buffer and our event loop just checks that buffer on each iteration and
+grabs any events it contains.
+
+For use in this we made a utility, in [`curses_console.h`](curses_console/curses_console.h), that
+encapsulates and provides an interface to the `ncurses` library.
+
+## Maybe owning (smart) pointer holder
 
 This has a class `PointerHolder` that acts as a wrapper for either a `std::unique_ptr` or
 a raw pointer. If it holds a raw pointer, then when the wrapper object is
@@ -37,20 +66,3 @@ ptr->otherMemberFunc();
 solve the same problem whenever it comes up. And there are likely complexities of
 actual use cases that this is ignoring. I just made it for fun and for
 learning purposes. However, I have seen related ideas in codebases I've been looking at recently.
-
-## `simple_concurrent_console_game`
-
-This is a very simple text-based terminal "game", for testing out basic concurrency ideas.
-It has one thread that reads key input from the UNIX standard input (which the program
-is expected to be associated with, hence "console") and the main thread has a render loop that
-prints the current state of a very simple game board. 
-
-There is a thread-safe queue,
-which has been borrowed from the example code repo for Anthony Williams' book
-_C++ Concurrency in Action_,
-[here](https://github.com/anthonywilliams/ccia_code_samples/blob/main/listings/listing_4.5.cpp).
-(Reading through that book motivated this example.)
-The key input thread populates this queue, and before each draw the render loop
-applies all the arrow key presses stored in the queue to update the current position
-of the "game piece". The main thread sleeps half a second at the end of each iteration
-of the render loop.

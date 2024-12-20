@@ -8,10 +8,16 @@
 
 #include <string>
 
-// Allows moving full ncurses header include to
-// the implementation file, so clients don't get
-// all of its declarations.
+// We include these to allow moving full ncurses
+// header include to the implementation file, so
+// clients don't get all of its declarations.
+
 typedef struct _win_st WINDOW;
+
+#define KEY_DOWN	0402		/* down-arrow key */
+#define KEY_UP		0403		/* up-arrow key */
+#define KEY_LEFT	0404		/* left-arrow key */
+#define KEY_RIGHT	0405		/* right-arrow key */
 
 // ------------------------------
 // A class providing an interface
@@ -19,19 +25,32 @@ typedef struct _win_st WINDOW;
 
 class CursesConsole {
 public:
+  static constexpr int NO_KEY = -1;
+
+public:
   // Initializes curses console state.
   CursesConsole();
   // Calls curses func to restore console.
   ~CursesConsole();
 
+  // Disables input buffering, "making characters typed by the
+  // user immediately available to the program". See:
+  //  https://linux.die.net/man/3/cbreak
+  void noInputBuffer();
+
+  void blockingGetCh();
+  void nonBlockingGetCh();
+
   // Set current text/background colors.
   void whiteOnBlack();
   void blueOnBlack();
+  void redOnBlack();
 
   void writeBuffer();
 
   void moveCursor( int x, int y );
 
+  void addChar( char ch );
   void addString( const std::string &str );
 
   // NOTE: These are not static because they assume
