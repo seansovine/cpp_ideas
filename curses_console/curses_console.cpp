@@ -39,9 +39,9 @@ void CursesConsole::nonBlockingGetCh() {
   nodelay( stdscr, true );
 }
 
-void CursesConsole::blockingGetCh() {
+void CursesConsole::blockingGetCh(int timeoutMs) {
   // Make getCh calls block again.
-  wtimeout( stdscr, -1 );
+  wtimeout( stdscr, timeoutMs );
 }
 
 void CursesConsole::whiteOnBlack() {

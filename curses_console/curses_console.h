@@ -44,7 +44,8 @@ public:
   //  https://linux.die.net/man/3/cbreak
   void noInputBuffer();
 
-  void blockingGetCh();
+  // Default argument sets blocking mode.
+  void blockingGetCh(int timeoutMs = -1);
   void nonBlockingGetCh();
 
   // Set current text/background colors.

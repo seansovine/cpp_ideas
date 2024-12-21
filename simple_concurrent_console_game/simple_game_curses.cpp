@@ -79,31 +79,26 @@ int main() {
 
   // Turn off input buffering.
   console.noInputBuffer();
-  // Non-blocking mode for getCh.
-  console.nonBlockingGetCh();
 
   // Hide cursor.
   console.cursorVisible( false );
   // Clear screen.
   console.writeBuffer();
 
+  constexpr int TIMEOUT_MS = 50;
+  // Timeout for getCh. This sets our maximum
+  // refresh rate in the main loop.
+
   // Main loop.
-  bool running = true;
-  while (running) {
-    for (auto ch = console.getChar(); ch != CursesConsole::NO_KEY; ch = console.getChar()) {
+  while (true) {
+    print_board( console );
+
+    if (auto ch = console.getChar(); ch != CursesConsole::NO_KEY) {
       if (ch == KEY_Q) {
-        running = false;
         break;
       }
       handleKeyPress( ch );
     }
-
-    print_board( console );
-    std::this_thread::sleep_for( 50ms );
-
-    // NOTE: Is there a way to skip the delay if a char was received?
-    // There should be some mechanism in the OS for this. Maybe an
-    // interruptable timeout? This would give immediate keypress response.
   }
 
   console.moveCursor( 0, 0 );
