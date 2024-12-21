@@ -85,15 +85,31 @@ int main() {
   // Clear screen.
   console.writeBuffer();
 
+  // Timeout for getCh: This sets the
+  // maximum refresh rate in the main loop.
+  //
+  // NOTE: Currently all state changes are triggered
+  // by user input, but we will add code that runs
+  // and makes changes independently. For example,
+  // we could have another piece that chases the
+  // user piece. So we use the timeout to keep updates
+  // happening independently of user input.
+
   constexpr int TIMEOUT_MS = 50;
-  // Timeout for getCh. This sets our maximum
-  // refresh rate in the main loop.
+  console.blockingGetCh( TIMEOUT_MS );
+
+  unsigned int counter = 0;
+  constexpr unsigned int MAX_COUNT = 1 << 12;
 
   // Main loop.
   while (true) {
     print_board( console );
 
-    if (auto ch = console.getChar(); ch != CursesConsole::NO_KEY) {
+    // Print refresh count for development use.
+    console.moveCursor( 0, HEIGHT + 4 );
+    console.addString( "Refresh count: " + std::to_string( counter++ % MAX_COUNT ) + "     " );
+
+    if (int ch = console.getChar(); ch != CursesConsole::NO_KEY) {
       if (ch == KEY_Q) {
         break;
       }
