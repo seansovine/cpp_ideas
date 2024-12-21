@@ -27,6 +27,12 @@ class CursesConsole {
 public:
   static constexpr int NO_KEY = -1;
 
+  enum class ColorPair {
+    WhiteOnBlack,
+    BlueOnBlack,
+    RedOnBlack
+  };
+
 public:
   // Initializes curses console state.
   CursesConsole();
@@ -52,6 +58,7 @@ public:
 
   void addChar( char ch );
   void addString( const std::string &str );
+  void addStringWithColor( const std::string &str, ColorPair color );
 
   // NOTE: These are not static because they assume
   // the initialization that is done in the constructor.

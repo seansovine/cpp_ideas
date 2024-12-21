@@ -34,9 +34,7 @@ void print_board( CursesConsole& console ) {
 
     for (int j = 0; j < WIDTH; j++) {
       if (i == piecePosition[ 1 ] && j == piecePosition[ 0 ]) {
-        console.redOnBlack();
-        console.addChar( 'X' );
-        console.whiteOnBlack();
+        console.addStringWithColor( "X", CursesConsole::ColorPair::RedOnBlack );
       } else {
         console.addChar( 'o' );
       }
@@ -79,8 +77,7 @@ int main() {
   // Ncurses console interface.
   CursesConsole console;
 
-  // For now disable input buffering; we'll want
-  // this back on when we move to an event loop.
+  // Turn off input buffering.
   console.noInputBuffer();
   // Non-blocking mode for getCh.
   console.nonBlockingGetCh();
@@ -90,6 +87,7 @@ int main() {
   // Clear screen.
   console.writeBuffer();
 
+  // Main loop.
   bool running = true;
   while (running) {
     for (auto ch = console.getChar(); ch != CursesConsole::NO_KEY; ch = console.getChar()) {
@@ -105,20 +103,18 @@ int main() {
 
     // NOTE: Is there a way to skip the delay if a char was received?
     // There should be some mechanism in the OS for this. Maybe an
-    // interruptable timeout?
+    // interruptable timeout? This would give immediate keypress response.
   }
 
   console.moveCursor( 0, 0 );
 
   // Press any key... message w/ color.
   console.addString( "Press " );
-  console.blueOnBlack();
-  console.addString( "any key" );
-  console.whiteOnBlack();
+  console.addStringWithColor( "any key", CursesConsole::ColorPair::BlueOnBlack );
   console.addString( " to continue..." );
 
   // Clear rest of old text from line.
-  auto lineErase = "                           ";
+  auto lineErase = std::string( 27, ' ' );
   console.addString( lineErase );
 
   console.writeBuffer();

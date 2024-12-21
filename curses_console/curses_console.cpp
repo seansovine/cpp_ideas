@@ -74,6 +74,21 @@ void CursesConsole::addString( const std::string &str ) {
   }
 }
 
+void CursesConsole::addStringWithColor( const std::string &str, ColorPair color ) {
+  switch (color) {
+    case ColorPair::BlueOnBlack:
+      blueOnBlack();
+      break;
+    case ColorPair::RedOnBlack:
+      redOnBlack();
+      break;
+    default:
+      throw std::runtime_error( "Unknown color pair." );
+  }
+  addString( str );
+  whiteOnBlack();
+}
+
 // NOTE: These are not static because they assume
 // the initialization that is done in the constructor.
 
