@@ -24,11 +24,11 @@ of the render loop.
 
 In the file [`simple_game_curses.cpp`](simple_concurrent_console_game/simple_game_curses.cpp) we
 have an `ncurses` implementation of the same simple "game" above. In this case all the
-concurrency is really handled by the operating system behind the since, as it collects
-keypresses in a buffer and our event loop just checks that buffer on each iteration and
+concurrency is really handled by the operating system behind the scenes, as it collects
+keypresses in a buffer, and our event loop just checks that buffer on each iteration and
 grabs any events it contains.
 
-For use in this we made a utility, in [`curses_console.h`](curses_console/curses_console.h), that
+For use in this we made a utility, [`curses_console.h`](curses_console/curses_console.h), that
 encapsulates and provides an interface to the `ncurses` library.
 
 ## Maybe owning (smart) pointer holder
